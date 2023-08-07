@@ -1,5 +1,6 @@
 package com.springsecurity.service;
 
+import com.springsecurity.model.Role;
 import com.springsecurity.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         com.springsecurity.model.User user = userRepository.findOneById(id);
 
         if (user != null) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("USER")); // USER 라는 역할을 넣어준다.
+            for (Role role : user.getRoles()) { //로그인 시 user.getRoles() 메소드를 호출함으로써 사용자가 가지고 있는 역할을 조회하여 부여한다.
+                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));  // DB에 저장되어 있는 권한을 부여한다.
+            }
             return new User(user.getId(), user.getPassword(), grantedAuthorities);
         } else {
             throw new UsernameNotFoundException("can not find User : " + id);

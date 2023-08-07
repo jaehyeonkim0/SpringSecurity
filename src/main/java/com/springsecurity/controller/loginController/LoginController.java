@@ -23,7 +23,7 @@ public class LoginController {
     @GetMapping("/signup")
     public String singUp(Model model) {
         model.addAttribute("userDto", new UserDto());
-        return "signUp";
+        return "signUp/signUp";
     }
 
     @PostMapping("/signup")

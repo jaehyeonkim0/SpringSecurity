@@ -1,4 +1,4 @@
-package com.springsecurity.security;
+package com.springsecurity;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,37 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @AllArgsConstructor
 public class SecurityConfiguration {
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()                    //HTTP 요청에 대한 보안 규칙을 설정하기 위한 시작점
-//                .antMatchers("/").permitAll()         //antMatchers("/") 루트 경로('/')에 대한 접근 권한을 설정, .permitAll() 루트 경로에 대해 모든 사용자에게 접근을 허용
-//                .anyRequest().authenticated()           //루트 경로를 제외한 다른 모든 요청에 대해서는 인증이 필요하다는 것을 설정
-//                .and()
-//        .formLogin()                                    //폼 기반 로그인을 사용하도록 설정
-//                .loginPage("/login")                    //사용자 정의 로그인 페이지의 URL을 설정합니다. /login 경로는 사용자 정의 로그인 페이지를 생성하는 데 사용
-//                .permitAll()
-//                .and()
-//         .logout()                                      //로그아웃 처리를 설정
-//                .permitAll();
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("password")
-//                        .roles("USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(user); // 메모리에 사용자 정보를 담는다.
-//    }
-
         private final UserDetailsService userDetailsService;    //UserDetailsService 란? Spring Security에서 유저의 정보를 가져오는 인터페이스
-
 
         @Bean
         public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -59,7 +29,7 @@ public class SecurityConfiguration {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             /* @formatter:off */
             http
-                    .authorizeRequests()
+                    .authorizeRequests()            //HTTP 요청에 대한 보안 규칙을 설정하기 위한 시작점
                     .antMatchers("/", "/signup").permitAll() // 설정한 리소스의 접근을 인증절차 없이 허용
                     .anyRequest().authenticated()   // 그 외 모든 리소스를 의미하며 인증 필요
                     .and()

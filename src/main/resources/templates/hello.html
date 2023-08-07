@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Hello Page</title>
@@ -9,6 +9,22 @@
 <h1>Hello Page</h1>
 
 <div th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</div>
+
+<h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).SYSTEM)">Has SYSTEM Role</h3>
+
+<!--USER 역할을 갖는다면 이 글이 보임-->
+<h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).USER)">Has USER Role</h3>
+
+<!--USER 역할을 갖는다면 이 글이 보임-->
+<h3 sec:authorize="hasRole('BOARD')">Has BOARD Role</h3>
+
+<!--어떤 역할이건 상관없이 인증이 되었다면 이 글이 보임-->
+<h3 sec:authorize="isAuthenticated()">Only Authenticated user can see this Text</h3>
+
+<div>
+    Authorities : <span sec:authentication="principal.authorities"></span>
+</div>
+<br>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out">
 </form>
