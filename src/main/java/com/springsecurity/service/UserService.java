@@ -23,7 +23,7 @@ public class UserService {
 
     public void insert(UserDto userDto) {
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        Set<Role> rolesSet = new HashSet<Role>();
+        Set<Role> rolesSet = new HashSet<>();
         rolesSet.add(roleRepository.findUserById(2L)); // id : 2 ROLE_USER 역할
         userRepository.save(userDto.toEntity(rolesSet));
     }

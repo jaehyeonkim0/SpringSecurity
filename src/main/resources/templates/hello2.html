@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+
+<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+<br>
+
+<!--SYSTEM 역할을 갖는다면 이 글이 보임-->
+<h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).SYSTEM)">Has SYSTEM Role</h3>
+
+<!--SYSTEM 역할과 OP_CREATE_DATA 권한을 갖는다면 이 글이 보임-->
+<h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).SYSTEM) and hasAuthority(T(com.springsecurity.enums.UserAuthority).OP_CREATE_DATA)">Has OP_CREATE_DATA Authority</h3>
+
+<!--SYSTEM 역할과 OP_DELETE_DATA 권한을 갖는다면 이 글이 보임-->
+<h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).SYSTEM) and hasAuthority(T(com.springsecurity.enums.UserAuthority).OP_DELETE_DATA)">Has OP_DELETE_DATA Authority</h3>
+
+<div>
+  Authorities : <span sec:authentication="principal.authorities"></span>
+</div>
+<br>
+
+<p>
+    시스템 관리자 페이지로 이동 <a th:href="@{/system}">SYSTEM</a>
+</p>
+<p>
+    시스템 관리자 등록 페이지로 이동 <a th:href="@{/system/create}">SYSTEM CREATE</a>
+</p>
+<p>
+    시스템 관리자 삭제 페이지로 이동 <a th:href="@{/system/delete}">SYSTEM DELETE</a>
+</p>
+
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Sign Out" />
+</form>
+
+
 </body>
 </html>

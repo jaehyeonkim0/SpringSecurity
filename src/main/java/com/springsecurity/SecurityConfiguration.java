@@ -1,5 +1,7 @@
 package com.springsecurity;
 
+import com.springsecurity.enums.UserAuthority;
+import com.springsecurity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +32,10 @@ public class SecurityConfiguration {
             /* @formatter:off */
             http
                     .authorizeRequests()            //HTTP 요청에 대한 보안 규칙을 설정하기 위한 시작점
-                    .antMatchers("/", "/signup").permitAll() // 설정한 리소스의 접근을 인증절차 없이 허용
+                    .antMatchers("/", "/signup").permitAll() // 설정한 리소스의 접근을 인증절차 없이 허용, .antMatchers()는 Spring Security에서 요청 경로에 대한 접근 권한을 설정하기 위해 사용되는 메소드
+                    .antMatchers("/system").hasRole(UserRole.SYSTEM.toString())
+                    .antMatchers("/system/create").access("hasRole('" +  UserRole.SYSTEM.toString() +  "') and hasAuthority('" + UserAuthority.OP_CREATE_DATA.toString() + "')") // SYSTEM 역할과 OP_CREATE_DATA 권한을 가지고 있어야 접근 허용
+                    .antMatchers("/system/delete").access("hasRole('" +  UserRole.SYSTEM.toString() +  "') and hasAuthority('" + UserAuthority.OP_DELETE_DATA.toString() + "')") // SYSTEM 역할과 OP_DELETE_DATA 권한을 가지고 있어야 접근 허용
                     .anyRequest().authenticated()   // 그 외 모든 리소스를 의미하며 인증 필요
                     .and()
             .formLogin()                            //폼 기반 로그인을 사용하도록 설정
@@ -44,7 +49,10 @@ public class SecurityConfiguration {
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 주소창에 요청해도 포스트로 인식하여 로그아웃
                     .deleteCookies("JSESSIONID") // 로그아웃 시 JSESSIONID 제거
                     .invalidateHttpSession(true) // 로그아웃 시 세션 종료
-                    .clearAuthentication(true); // 로그아웃 시 권한 제거
+                    .clearAuthentication(true) // 로그아웃 시 권한 제거
+                    .and()
+            .exceptionHandling()
+                    .accessDeniedPage("/accessDenied");
 
             return http.build();
             /* @formatter:on */

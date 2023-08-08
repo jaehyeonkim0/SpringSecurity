@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Hello Page</title>
 </head>
 <body>
 
-<h1>Hello Page</h1>
-
-<div th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</div>
-
+<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+<!--SYSTEM 역할을 갖는다면 이 글이 보임-->
+<!--hasRole() : Spring Security의 보안 표현식을 사용하여 현재 사용자가 특정 역할(롤)을 가지고 있는지 여부를 확인하는 메서드. 역할 기반의 권한 부여를 수행할 때 사용.-->
 <h3 sec:authorize="hasRole(T(com.springsecurity.enums.UserRole).SYSTEM)">Has SYSTEM Role</h3>
 
 <!--USER 역할을 갖는다면 이 글이 보임-->
@@ -19,11 +18,18 @@
 <h3 sec:authorize="hasRole('BOARD')">Has BOARD Role</h3>
 
 <!--어떤 역할이건 상관없이 인증이 되었다면 이 글이 보임-->
+<!--isAuthenticated() 메서드는 현재 사용자가 인증되어 있는지 여부를 boolean 값으로 반환. 즉, 인증되었을 경우에 true, 그렇지 않은 경우에 false 반환-->
 <h3 sec:authorize="isAuthenticated()">Only Authenticated user can see this Text</h3>
 
+<!--Thymeleaf 템플릿에서 Spring Security의 인증 정보를 활용하여 현재 사용자의 권한 정보를 가져오는 코드-->
 <div>
     Authorities : <span sec:authentication="principal.authorities"></span>
 </div>
+
+<p>
+    시스템 관리자 페이지로 이동 <a th:href="@{/system}">SYSTEM</a>
+</p>
+
 <br>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out">
